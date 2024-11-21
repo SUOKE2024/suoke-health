@@ -1,179 +1,246 @@
 <template>
   <div class="community-page">
-    <!-- 热门活动 -->
-    <section class="community-section">
-      <h2 class="section-title">
-        <span class="material-icons-round">local_fire_department</span>
-        热门活动
-      </h2>
-      <div class="activity-card">
-        <span class="material-icons-round">event</span>
-        <h3>年度健康普查</h3>
-        <p>限时特惠 · 1280人已参与</p>
-        <div class="tag-list">
-          <span class="tag">心脑</span>
-          <span class="tag">甲状腺</span>
-          <span class="tag">更多</span>
-        </div>
+    <!-- 标题栏：保持上下结构 -->
+    <header class="header">
+      <div class="search-bar icon-text-vertical">
+        <span class="material-icons-round">search</span>
+        <span class="label">搜索话题</span>
       </div>
-    </section>
+      <div class="icon-text-vertical" @click="showPublish = true">
+        <span class="material-icons-round">edit</span>
+        <span class="label">发布</span>
+      </div>
+    </header>
 
-    <!-- 健康话题 -->
-    <section class="community-section">
-      <h2 class="section-title">
-        <span class="material-icons-round">forum</span>
-        健康话题
-      </h2>
-      <div class="topic-list">
-        <div class="topic-card" v-for="topic in topics" :key="topic.id">
-          <div class="topic-header">
-            <Avatar :src="topic.avatar" size="small" />
-            <span class="name">{{ topic.name }}</span>
-            <span class="time">{{ topic.time }}</span>
-          </div>
-          <div class="topic-content">
-            <p>{{ topic.content }}</p>
-            <div class="topic-images" v-if="topic.images?.length">
-              <img v-for="img in topic.images" :key="img" :src="img" />
+    <!-- 分类标签：左右结构 -->
+    <div class="categories">
+      <div 
+        v-for="category in categories" 
+        :key="category.id"
+        class="category-item icon-text"
+        :class="{ active: currentCategory === category.id }"
+        @click="currentCategory = category.id"
+      >
+        <span class="material-icons-round">{{ category.icon }}</span>
+        <span class="label">{{ category.name }}</span>
+      </div>
+    </div>
+
+    <!-- 帖子列表 -->
+    <div class="post-list">
+      <div v-for="post in posts" :key="post.id" class="post-item">
+        <div class="post-header">
+          <div class="user-info">
+            <Avatar :defaultIcon="post.userIcon" size="small" />
+            <div class="info">
+              <div class="name">{{ post.userName }}</div>
+              <div class="time">{{ formatTime(post.timestamp) }}</div>
             </div>
           </div>
-          <div class="topic-footer">
-            <div class="action">
-              <span class="material-icons-round">thumb_up</span>
-              <span>{{ topic.likes }}</span>
-            </div>
-            <div class="action">
-              <span class="material-icons-round">chat_bubble</span>
-              <span>{{ topic.comments }}</span>
-            </div>
-            <div class="action">
-              <span class="material-icons-round">share</span>
-              <span>分享</span>
-            </div>
+          <div class="icon-text">
+            <span class="material-icons-round">more_horiz</span>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          <p class="text">{{ post.content }}</p>
+          <div class="images" v-if="post.images?.length">
+            <img 
+              v-for="(img, index) in post.images" 
+              :key="index" 
+              :src="img" 
+              @click="previewImage(post.images, index)"
+            >
+          </div>
+        </div>
+
+        <div class="post-footer">
+          <div class="action icon-text">
+            <span class="material-icons-round">thumb_up</span>
+            <span class="count">{{ post.likes }}</span>
+          </div>
+          <div class="action icon-text">
+            <span class="material-icons-round">chat_bubble</span>
+            <span class="count">{{ post.comments }}</span>
+          </div>
+          <div class="action icon-text">
+            <span class="material-icons-round">share</span>
+            <span class="count">{{ post.shares }}</span>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import Avatar from '@/components/common/Avatar.vue'
+import { formatTime } from '@/utils/time'
 
-const topics = ref([
+const showPublish = ref(false)
+const currentCategory = ref(1)
+
+const categories = [
+  { id: 1, name: '推荐', icon: 'recommend' },
+  { id: 2, name: '健康', icon: 'favorite' },
+  { id: 3, name: '饮食', icon: 'restaurant' },
+  { id: 4, name: '运动', icon: 'directions_run' },
+  { id: 5, name: '心理', icon: 'psychology' }
+]
+
+const posts = ref([
   {
     id: 1,
-    name: '营养师小王',
-    avatar: '/images/nutritionist-avatar.png',
-    time: '10分钟前',
-    content: '秋季养生小贴士：1. 早睡早起 2. 适量运动 3. 注意保暖',
+    userName: '健康达人',
+    userIcon: 'person',
+    content: '每天坚持运动的第30天，感觉整个人都不一样了！',
+    images: ['/images/post1.jpg'],
+    timestamp: Date.now() - 1000 * 60 * 30,
     likes: 128,
-    comments: 32
+    comments: 32,
+    shares: 16
   },
   {
     id: 2,
-    name: '运动达人',
-    avatar: '/images/fitness-avatar.png',
-    time: '30分钟前',
-    content: '分享一组简单的居家运动，每天10分钟，强健体魄！',
-    images: ['/images/fitness-1.jpg', '/images/fitness-2.jpg'],
+    userName: '营养师小王',
+    userIcon: 'medical_services',
+    content: '分享一个健康又美味的早餐食谱...',
+    timestamp: Date.now() - 1000 * 60 * 60,
     likes: 256,
-    comments: 64
+    comments: 64,
+    shares: 32
   }
 ])
+
+const previewImage = (images: string[], index: number) => {
+  // 实现图片预览功能
+}
 </script>
 
 <style lang="scss" scoped>
 .community-page {
   padding: 16px;
-  animation: fade-in 0.3s ease-out;
 
-  .section-title {
+  .header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
     margin-bottom: 16px;
-    
-    .material-icons-round {
-      color: $primary-color;
+
+    .search-bar {
+      flex: 1;
+      margin-right: 16px;
+      padding: 8px;
+      background: #fff;
+      border-radius: 8px;
+      color: $text-secondary;
     }
   }
 
-  .activity-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 24px;
-    transition: transform 0.2s;
+  .categories {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 8px;
     
-    &:active {
-      transform: scale(0.98);
+    &::-webkit-scrollbar {
+      display: none;
     }
-    
-    .material-icons-round {
-      font-size: 32px;
-      color: $primary-color;
-      margin-bottom: 8px;
+
+    .category-item {
+      padding: 8px 16px;
+      background: #fff;
+      border-radius: 20px;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      
+      &.active {
+        background: $primary-color;
+        color: #fff;
+      }
+      
+      .material-icons-round {
+        font-size: var(--font-size-base);
+      }
+      
+      .label {
+        font-size: var(--font-size-small);
+      }
     }
   }
 
-  .topic-list {
-    .topic-card {
+  .post-list {
+    .post-item {
       background: #fff;
       border-radius: 12px;
       padding: 16px;
-      margin-bottom: 16px;
-      
-      .topic-header {
+      margin-bottom: 12px;
+
+      .post-header {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 8px;
         margin-bottom: 12px;
-        
-        .name {
-          font-weight: 500;
-        }
-        
-        .time {
-          color: $text-secondary;
-          font-size: $font-size-small;
-          margin-left: auto;
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          .info {
+            .name {
+              font-weight: 500;
+              font-size: var(--font-size-base);
+            }
+
+            .time {
+              color: $text-secondary;
+              font-size: var(--font-size-mini);
+            }
+          }
         }
       }
-      
-      .topic-content {
+
+      .post-content {
         margin-bottom: 12px;
-        
-        .topic-images {
+
+        .text {
+          margin-bottom: 8px;
+          font-size: var(--font-size-base);
+          line-height: 1.5;
+        }
+
+        .images {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 8px;
-          margin-top: 8px;
+          gap: 4px;
           
           img {
             width: 100%;
             aspect-ratio: 1;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 4px;
           }
         }
       }
-      
-      .topic-footer {
+
+      .post-footer {
         display: flex;
         justify-content: space-around;
-        border-top: 1px solid $border-lighter;
+        border-top: 1px solid $border-light;
         padding-top: 12px;
-        
+
         .action {
-          display: flex;
-          align-items: center;
-          gap: 4px;
           color: $text-secondary;
           
           .material-icons-round {
-            font-size: 20px;
+            font-size: var(--font-size-base);
+          }
+          
+          .count {
+            font-size: var(--font-size-small);
           }
         }
       }

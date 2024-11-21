@@ -1,255 +1,217 @@
 <template>
   <div class="profile-page">
-    <!-- 用户信息 -->
-    <section class="profile-header">
-      <div class="user-info">
-        <Avatar src="/images/user-avatar.png" size="large" />
+    <!-- 用户信息卡片 -->
+    <div class="user-card">
+      <div class="header">
+        <Avatar 
+          :defaultIcon="userInfo.avatar" 
+          size="large"
+          clickable
+        />
         <div class="info">
-          <h2>张三</h2>
-          <p>会员等级：黄金会员</p>
+          <h2 class="name">{{ userInfo.name }}</h2>
+          <p class="bio">{{ userInfo.bio }}</p>
+        </div>
+        <div class="icon-text-vertical" @click="handleEdit">
+          <span class="material-icons-round">edit</span>
+          <span class="label">编辑</span>
         </div>
       </div>
-      <span class="material-icons-round" @click="handleSettings">settings</span>
-    </section>
+      
+      <div class="stats">
+        <div class="stat-item" v-for="stat in stats" :key="stat.label">
+          <span class="value">{{ stat.value }}</span>
+          <span class="label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </div>
 
-    <!-- 健康数据 -->
-    <section class="profile-section">
-      <h2 class="section-title">
-        <span class="material-icons-round">monitoring</span>
-        健康数据
-      </h2>
-      <div class="data-grid">
-        <div class="data-card">
-          <span class="material-icons-round">directions_walk</span>
-          <h3>步数</h3>
-          <p>8,546</p>
-          <a class="link">今日数据 <span class="material-icons-round">chevron_right</span></a>
-        </div>
-        <div class="data-card">
-          <span class="material-icons-round">bedtime</span>
-          <h3>睡眠</h3>
-          <p>7.5h</p>
-          <a class="link">查看报告 <span class="material-icons-round">chevron_right</span></a>
-        </div>
-        <div class="data-card">
-          <span class="material-icons-round">favorite</span>
-          <h3>心率</h3>
-          <p>正常</p>
-          <a class="link">趋势分析 <span class="material-icons-round">chevron_right</span></a>
+    <!-- 功能菜单 -->
+    <div class="menu-section" v-for="section in menuSections" :key="section.title">
+      <h3 class="section-title">{{ section.title }}</h3>
+      <div class="menu-list">
+        <div 
+          v-for="item in section.items" 
+          :key="item.id"
+          class="menu-item icon-text"
+          @click="handleMenuClick(item)"
+        >
+          <div class="left icon-text">
+            <span class="material-icons-round" :style="{ color: item.color }">
+              {{ item.icon }}
+            </span>
+            <span class="label">{{ item.label }}</span>
+          </div>
+          <span class="material-icons-round arrow">chevron_right</span>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- 我的服务 -->
-    <section class="profile-section">
-      <h2 class="section-title">
-        <span class="material-icons-round">grid_view</span>
-        我的服务
-      </h2>
-      <div class="service-grid">
-        <div class="service-item" v-for="item in services" :key="item.name">
-          <span class="material-icons-round">{{ item.icon }}</span>
-          <span>{{ item.name }}</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 会员权益 -->
-    <section class="profile-section">
-      <h2 class="section-title">
-        <span class="material-icons-round">card_membership</span>
-        会员权益
-      </h2>
-      <div class="vip-card">
-        <ul class="vip-list">
-          <li><span class="material-icons-round">check_circle</span> AI 专属服务</li>
-          <li><span class="material-icons-round">check_circle</span> 定制化推荐</li>
-          <li><span class="material-icons-round">check_circle</span> 优先预约</li>
-          <li><span class="material-icons-round">check_circle</span> 专家咨询</li>
-        </ul>
-        <a class="link">查看更多特权 <span class="material-icons-round">chevron_right</span></a>
-      </div>
-    </section>
+    <!-- 退出登录按钮 -->
+    <div class="logout-button">
+      <Button type="danger" block @click="handleLogout">退出登录</Button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import Avatar from '@/components/common/Avatar.vue'
+import Button from '@/components/common/Button.vue'
 
-const services = ref([
-  { name: '问诊记录', icon: 'history' },
-  { name: '订单管理', icon: 'receipt_long' },
-  { name: '收藏内容', icon: 'favorite' },
-  { name: '健康报告', icon: 'description' },
-  { name: '我的预约', icon: 'event' },
-  { name: '浏览记录', icon: 'history_toggle_off' }
-])
+const userInfo = ref({
+  name: '张三',
+  avatar: 'person',
+  bio: '每天都要保持健康好心情'
+})
 
-const handleSettings = () => {
-  // 处理设置
+const stats = [
+  { label: '关注', value: '128' },
+  { label: '粉丝', value: '256' },
+  { label: '获赞', value: '1.2k' }
+]
+
+const menuSections = [
+  {
+    title: '健康管理',
+    items: [
+      { id: 1, label: '健康档案', icon: 'folder', color: '#4CAF50' },
+      { id: 2, label: '运动记录', icon: 'directions_run', color: '#2196F3' },
+      { id: 3, label: '饮食计划', icon: 'restaurant', color: '#FF9800' }
+    ]
+  },
+  {
+    title: '系统设置',
+    items: [
+      { id: 4, label: '消息通知', icon: 'notifications', color: '#9C27B0' },
+      { id: 5, label: '隐私设置', icon: 'security', color: '#607D8B' },
+      { id: 6, label: '关于我们', icon: 'info', color: '#795548' }
+    ]
+  }
+]
+
+const handleEdit = () => {
+  // 处理编辑个人信息
+}
+
+const handleMenuClick = (item: any) => {
+  // 处理菜单点击
+}
+
+const handleLogout = () => {
+  // 处理退出登录
 }
 </script>
 
 <style lang="scss" scoped>
 .profile-page {
   padding: 16px;
-  animation: fade-in 0.3s ease-out;
 
-  .profile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    
-    .user-info {
+  .user-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    .header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      
+      margin-bottom: 16px;
+
       .info {
-        h2 {
-          font-size: $font-size-large;
+        flex: 1;
+        margin: 0 16px;
+
+        .name {
+          font-size: var(--font-size-large);
+          font-weight: 600;
           margin-bottom: 4px;
         }
-        
-        p {
+
+        .bio {
           color: $text-secondary;
-          font-size: $font-size-small;
+          font-size: var(--font-size-small);
         }
       }
     }
-    
-    .material-icons-round {
-      font-size: 24px;
-      color: $text-secondary;
-      cursor: pointer;
-    }
-  }
 
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    
-    .material-icons-round {
-      color: $primary-color;
-    }
-  }
-
-  .data-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-    
-    .data-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: transform 0.2s;
-      
-      &:active {
-        transform: scale(0.98);
-      }
-      
-      .material-icons-round {
-        font-size: 24px;
-        color: $primary-color;
-        margin-bottom: 8px;
-      }
-      
-      h3 {
-        font-size: $font-size-small;
-        margin-bottom: 4px;
-      }
-      
-      p {
-        font-size: $font-size-large;
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
-      
-      .link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        color: $primary-color;
-        font-size: $font-size-small;
-        
-        .material-icons-round {
-          font-size: 16px;
-          margin: 0;
-        }
-      }
-    }
-  }
-
-  .service-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
-    
-    .service-item {
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      transition: transform 0.2s;
-      
-      &:active {
-        transform: scale(0.98);
-      }
-      
-      .material-icons-round {
-        font-size: 24px;
-        color: $primary-color;
-        margin-bottom: 8px;
-      }
-      
-      span {
-        font-size: $font-size-small;
-      }
-    }
-  }
-
-  .vip-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 16px;
-    
-    .vip-list {
-      list-style: none;
-      margin-bottom: 12px;
-      
-      li {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 8px;
-        
-        .material-icons-round {
-          font-size: 20px;
-          color: $success-color;
-        }
-      }
-    }
-    
-    .link {
+    .stats {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      color: $primary-color;
-      
-      .material-icons-round {
-        font-size: 18px;
+      justify-content: space-around;
+      padding-top: 16px;
+      border-top: 1px solid $border-light;
+
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+
+        .value {
+          font-size: var(--font-size-medium);
+          font-weight: 600;
+          color: $primary-color;
+        }
+
+        .label {
+          font-size: var(--font-size-small);
+          color: $text-secondary;
+        }
       }
     }
+  }
+
+  .menu-section {
+    margin-bottom: 20px;
+
+    .section-title {
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+
+    .menu-list {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+
+      .menu-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        transition: all 0.3s ease;
+        
+        &:not(:last-child) {
+          border-bottom: 1px solid $border-light;
+        }
+        
+        &:active {
+          background: $background-light;
+        }
+
+        .left {
+          .material-icons-round {
+            font-size: var(--font-size-large);
+          }
+          
+          .label {
+            font-size: var(--font-size-base);
+            margin-left: 12px;
+          }
+        }
+
+        .arrow {
+          color: $text-secondary;
+        }
+      }
+    }
+  }
+
+  .logout-button {
+    margin-top: 32px;
+    padding: 0 16px;
   }
 }
 </style>
