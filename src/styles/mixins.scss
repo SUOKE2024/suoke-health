@@ -1,0 +1,15 @@
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 56px);
+}

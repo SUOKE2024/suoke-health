@@ -1,28 +1,25 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-    <TabBar />
+  <div class="app-container">
+    <router-view />
+    <TabBar v-if="showTabBar" />
   </div>
 </template>
 
-<script>
-import TabBar from './components/layout/TabBar.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import TabBar from './components/TabBar.vue'
 
-export default {
-  name: 'App',
-  components: {
-    TabBar
-  }
-}
+const route = useRoute()
+const showTabBar = computed(() => !['login', 'register'].includes(route.name as string))
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+@use "@/styles/variables.scss" as *;
+@use "@/styles/icons.scss" as *;
+
+.app-container {
+  min-height: 100vh;
+  background-color: $background-color;
 }
 </style>

@@ -1,0 +1,47 @@
+// 主题色
+$primary-color: #2196F3;
+$success-color: #4CAF50;
+$warning-color: #FFC107;
+$danger-color: #F44336;
+$info-color: #00BCD4;
+
+// 文字颜色
+$text-primary: #333333;
+$text-secondary: #666666;
+$text-disabled: #999999;
+
+// 背景色
+$background-color: #F5F5F5;
+$background-light: #FAFAFA;
+$background-dark: #EEEEEE;
+
+// 边框色
+$border-color: #E0E0E0;
+$border-light: #F0F0F0;
+$border-lighter: #F5F5F5;
+
+// 响应式字体大小
+:root {
+  // 基础字号
+  --font-size-base: clamp(14px, 3.733vw, 16px);
+  
+  // 其他字号基于基础字号计算
+  --font-size-mini: calc(var(--font-size-base) * 0.75);    // 12px
+  --font-size-small: calc(var(--font-size-base) * 0.875);  // 14px
+  --font-size-medium: calc(var(--font-size-base) * 1.125); // 18px
+  --font-size-large: calc(var(--font-size-base) * 1.25);   // 20px
+  --font-size-xlarge: calc(var(--font-size-base) * 1.5);   // 24px
+  
+  // 头像尺寸
+  --avatar-size-small: clamp(32px, 8.533vw, 40px);
+  --avatar-size-medium: clamp(40px, 10.667vw, 48px);
+  --avatar-size-large: clamp(48px, 12.8vw, 56px);
+}
+
+// 字体变量
+$font-size-mini: var(--font-size-mini);
+$font-size-small: var(--font-size-small);
+$font-size-base: var(--font-size-base);
+$font-size-medium: var(--font-size-medium);
+$font-size-large: var(--font-size-large);
+$font-size-xlarge: var(--font-size-xlarge);

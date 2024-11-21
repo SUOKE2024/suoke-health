@@ -1,9 +1,25 @@
 <template>
   <div class="tab-bar">
-    <router-link to="/" class="tab-item">首页</router-link>
-    <router-link to="/services" class="tab-item">服务</router-link>
-    <router-link to="/community" class="tab-item">社区</router-link>
-    <router-link to="/profile" class="tab-item">我的</router-link>
+    <router-link to="/" class="tab-item">
+      <span class="icon">🏠</span>
+      <span>首页</span>
+    </router-link>
+    <router-link to="/services" class="tab-item">
+      <span class="icon">💊</span>
+      <span>服务</span>
+    </router-link>
+    <router-link to="/featured" class="tab-item">
+      <span class="icon">⭐</span>
+      <span>精选</span>
+    </router-link>
+    <router-link to="/community" class="tab-item">
+      <span class="icon">👥</span>
+      <span>社区</span>
+    </router-link>
+    <router-link to="/profile" class="tab-item">
+      <span class="icon">👤</span>
+      <span>我的</span>
+    </router-link>
   </div>
 </template>
 
@@ -23,6 +39,7 @@ export default {
   display: flex;
   background-color: #fff;
   border-top: 1px solid #eee;
+  z-index: 100;
 }
 
 .tab-item {
@@ -33,6 +50,12 @@ export default {
   justify-content: center;
   color: #666;
   text-decoration: none;
+  font-size: 12px;
+}
+
+.tab-item .icon {
+  font-size: 20px;
+  margin-bottom: 2px;
 }
 
 .tab-item.router-link-active {

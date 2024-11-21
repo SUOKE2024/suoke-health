@@ -1,0 +1,40 @@
+@font-face {
+  font-family: 'suoke-icons';
+  src: url('/fonts/suoke-icons.woff2') format('woff2');
+}
+
+[class^="icon-"] {
+  font-family: 'suoke-icons' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-home:before {
+  content: "\e900";
+}
+.icon-services:before {
+  content: "\e901";
+}
+.icon-featured:before {
+  content: "\e902";
+}
+.icon-community:before {
+  content: "\e903";
+}
+.icon-profile:before {
+  content: "\e904";
+}
+.icon-search:before {
+  content: "\e905";
+}
+.icon-notification:before {
+  content: "\e906";
+}
+.icon-plus:before {
+  content: "\e907";
+}
