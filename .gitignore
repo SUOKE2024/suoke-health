@@ -12,3 +12,6 @@ dist/
 *.ntvs*
 *.njsproj
 *.sln
+suoke-health@1.0.0
+vite
+node_modules/.vite
